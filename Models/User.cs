@@ -7,14 +7,14 @@ namespace bookFlow.Models
     {
         public Guid Id { get; set; }
         public string Username { get; set; } = string.Empty;
+      
+        public string FullName { get; set; }
+        [EmailAddress]
+        public string Email { get; set; }
         public string PasswordHash { get; set; } = string.Empty;
         public ERole Role { get; set; } = ERole.USER;
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiryTime { get; set; }
-        public string FullName { get; set; }
-        [EmailAddress]
-        public string Email { get; set; }
-
 
 
 
