@@ -1,18 +1,15 @@
-﻿namespace bookFlow.Models
-{
-    public class Rating
-    {
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public string Author { get; set; }
-        public string ISBN { get; set; }
-        public string Publisher { get; set; }
-        public string PublishedDate { get; set; }
-        public string Description { get; set; }
-        public string ThumbnailUrl { get; set; }
-        public bool IsAvailable { get; set; }
+﻿using bookFlow.Models;
 
-        public ICollection<Loan> Loans { get; set; }
-        public ICollection<Rating> Ratings { get; set; }
-    }
+public class Rating
+{
+    public Guid Id { get; set; }
+    public int Score { get; set; } // e.g., 1 to 5
+    public string Comment { get; set; }
+    public DateTime Date { get; set; }
+
+    public Guid BookId { get; set; }
+    public Book Book { get; set; }
+
+    public Guid UserId { get; set; }
+    
 }
