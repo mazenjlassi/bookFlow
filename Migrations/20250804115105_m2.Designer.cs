@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using bookFlow.Data;
 
@@ -11,9 +12,11 @@ using bookFlow.Data;
 namespace bookFlow.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    partial class UserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250804115105_m2")]
+    partial class m2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,9 +27,11 @@ namespace bookFlow.Migrations
 
             modelBuilder.Entity("bookFlow.Models.Book", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Author")
                         .IsRequired()
@@ -100,9 +105,6 @@ namespace bookFlow.Migrations
                     b.Property<int>("BookId")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("BookId1")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int?>("RatingId")
                         .HasColumnType("int");
 
@@ -124,7 +126,7 @@ namespace bookFlow.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookId1");
+                    b.HasIndex("BookId");
 
                     b.HasIndex("RatingId");
 
@@ -145,8 +147,8 @@ namespace bookFlow.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("BookId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("BookId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -281,7 +283,7 @@ namespace bookFlow.Migrations
                 {
                     b.HasOne("bookFlow.Models.Book", "Book")
                         .WithMany("Loans")
-                        .HasForeignKey("BookId1")
+                        .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
