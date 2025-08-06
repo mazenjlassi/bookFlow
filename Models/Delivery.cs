@@ -4,15 +4,15 @@ namespace bookFlow.Models
 {
     public class Delivery
     {
-        
-            public int Id { get; set; }
+        public Guid Id { get; set; }
 
-            public int LoanId { get; set; }
-            public Loan Loan { get; set; }
+        public Guid LoanId { get; set; }
+        public Loan Loan { get; set; }
 
-            public DeliveryStatus Status { get; set; }
-            public DateTime? DeliveryDate { get; set; }
-        }
+        public Guid? DeliveryManId { get; set; }
+        public DeliveryMan? DeliveryMan { get; set; }
 
+        public DeliveryStatus Status { get; set; }
+        public DateTime? DeliveryDate { get; set; }
+    }
 }
-

@@ -10,6 +10,7 @@ using bookFlow.Services.Interfaces;
 using bookFlow.Repositories.Interfaces;
 using bookFlow.Repositories.Implementations;
 using bookFlow.Repositories.Implimentations;
+using bookFlow.Services.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +44,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
 builder.Services.AddScoped(typeof(IBookRepository), typeof(BookRepository));
+builder.Services.AddScoped(typeof(ILoanRepository), typeof(LoanRepository));
+builder.Services.AddScoped(typeof(IDeliveryManRepository),typeof(DeliveryManRepository));
 
 
 
@@ -50,6 +53,8 @@ builder.Services.AddScoped(typeof(IBookRepository), typeof(BookRepository));
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped(typeof(IUserService), typeof(UserService));
 builder.Services.AddScoped(typeof(IBookService), typeof(BookService));
+builder.Services.AddScoped(typeof(ILoanService), typeof(LoanService));
+builder.Services.AddScoped(typeof(IDeliveryManService), typeof(DeliveryManService));
 
 
 

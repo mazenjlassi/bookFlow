@@ -1,8 +1,11 @@
 ﻿namespace bookFlow.Enum
 {
     public enum ERole
-    {ADMIN ,
-            USER ,
-            DELIVERYMAN
+    
+    {
+        USER,
+        ADMIN,
+        DELIVERY_MAN
     }
+
 }
