@@ -5,12 +5,12 @@ namespace bookFlow.Models
     public class Loan
     {
        
-            public int Id { get; set; }
+            public Guid Id { get; set; }
 
-            public int BookId { get; set; }
+            public Guid BookId { get; set; }
             public Book Book { get; set; }
 
-            public string UserId { get; set; }
+            public Guid UserId { get; set; }
             public User User { get; set; }
 
             public DateTime StartDate { get; set; }
