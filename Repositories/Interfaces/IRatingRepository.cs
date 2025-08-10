@@ -2,7 +2,7 @@
 
 namespace bookFlow.Repositories.Interfaces
 {
-    public interface IDeliveryManRepository : IGenericRepository<DeliveryMan>
+    public interface IRatingRepository : IGenericRepository<Rating>
     {
     }
 }

@@ -18,7 +18,7 @@ namespace bookFlow.Controllers
         
 
         [HttpGet("get-all")]
-        [Authorize]
+        [Authorize (Roles = "Admin")]
         public async Task <IActionResult> getAll()
         {
             try { var users = await _userService.GetAllAsync();
@@ -87,7 +87,7 @@ namespace bookFlow.Controllers
         }
 
         [HttpGet("get-by-id/{id}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetUserById(Guid id)
         {
             try

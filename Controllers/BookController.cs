@@ -73,6 +73,7 @@ namespace bookFlow.Controllers
             }
         }
         [HttpPost("create")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateBook([FromBody] Book book)
         {
             try
@@ -92,7 +93,7 @@ namespace bookFlow.Controllers
 
 
         [HttpDelete("delete/{id}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
             try
@@ -114,7 +115,7 @@ namespace bookFlow.Controllers
             }
         }
         [HttpPut("update-availability/{id}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateAvailability(Guid id)
         {
             try
