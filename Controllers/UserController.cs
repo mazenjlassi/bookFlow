@@ -18,7 +18,7 @@ namespace bookFlow.Controllers
         
 
         [HttpGet("get-all")]
-        [Authorize (Roles = "Admin")]
+        [Authorize]
         public async Task <IActionResult> getAll()
         {
             try { var users = await _userService.GetAllAsync();

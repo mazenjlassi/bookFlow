@@ -20,7 +20,7 @@ namespace bookFlow.Controllers
         }
 
         [HttpGet("get-all")]
-        [Authorize]
+        
         public async Task<IActionResult> GetAll()
         {
             try
@@ -73,7 +73,7 @@ namespace bookFlow.Controllers
             }
         }
         [HttpPost("create")]
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         public async Task<IActionResult> CreateBook([FromBody] Book book)
         {
             try
