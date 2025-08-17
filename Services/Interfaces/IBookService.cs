@@ -10,6 +10,7 @@ namespace bookFlow.Services.Interfaces
         Task<bool> UpdateAvailabilityAsync(Guid id);
         Task<bool> DeleteAsync(Book book);
         Task<Book?> GetByIsbnAsync(string isbn);
+        Task<Book?> GetByNameAsync(string Title);
 
     }
 }

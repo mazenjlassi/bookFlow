@@ -10,6 +10,7 @@ using bookFlow.Repositories.Interfaces;
 using bookFlow.Repositories.Implementations;
 using bookFlow.Repositories.Implimentations;
 using bookFlow.Services.Implementations;
+using BookFlow.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,12 +57,14 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 builder.Services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
 builder.Services.AddScoped(typeof(IBookRepository), typeof(BookRepository));
 builder.Services.AddScoped(typeof(ILoanRepository), typeof(LoanRepository));
+builder.Services.AddScoped(typeof(IRatingRepository), typeof(RatingRepository));
 
 // Add services to scope
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped(typeof(IUserService), typeof(UserService));
 builder.Services.AddScoped(typeof(IBookService), typeof(BookService));
 builder.Services.AddScoped(typeof(ILoanService), typeof(LoanService));
+builder.Services.AddScoped(typeof(IRatingService), typeof(RatingService));
 
 var app = builder.Build();
 
