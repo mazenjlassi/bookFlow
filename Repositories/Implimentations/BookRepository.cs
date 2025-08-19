@@ -30,7 +30,9 @@ namespace bookFlow.Repositories.Implimentations
             await _context.SaveChangesAsync();
         }
 
-
-
+        public async Task<Book?> GetByNameAsync(string Title)
+        {
+            return await _context.Books.FirstOrDefaultAsync(b => b.Title == Title);
+        }
     }
 }

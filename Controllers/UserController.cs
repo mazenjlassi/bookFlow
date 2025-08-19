@@ -87,7 +87,7 @@ namespace bookFlow.Controllers
         }
 
         [HttpGet("get-by-id/{id}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetUserById(Guid id)
         {
             try

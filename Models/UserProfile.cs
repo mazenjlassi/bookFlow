@@ -1,8 +1,11 @@
-﻿namespace bookFlow.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace bookFlow.Models
 
 {
     public class UserProfile
     {
+        [Key]
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
         public User User { get; set; }

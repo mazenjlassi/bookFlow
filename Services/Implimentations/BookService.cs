@@ -54,6 +54,9 @@ namespace bookFlow.Services.Implimentations
             return _bookRepository.GetByIsbnAsync(isbn);
         }
 
-        
+        public Task<Book?> GetByNameAsync(string Title)
+        {
+            return _bookRepository.GetByNameAsync(Title);
+        }
     }
 }

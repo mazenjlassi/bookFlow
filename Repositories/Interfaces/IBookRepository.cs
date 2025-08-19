@@ -6,6 +6,8 @@ namespace bookFlow.Repositories.Interfaces
     {
         Task<Book?> GetByIsbnAsync(string isbn);
 
+        Task<Book?> GetByNameAsync(string Title);
+
         Task<Book?> GetByIdAsync(Guid id);
         Task UpdateAsync(Book book);
 

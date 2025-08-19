@@ -20,7 +20,7 @@ namespace bookFlow.Controllers
         }
 
         [HttpGet("get-all")]
-        [Authorize]
+        
         public async Task<IActionResult> GetAll()
         {
             try
@@ -54,25 +54,8 @@ namespace bookFlow.Controllers
             }
         }
 
-        [HttpGet("get-by-isbn/{isbn}")]
-        [Authorize]
-        public async Task<IActionResult> GetByIsbn(string isbn)
-        {
-            try
-            {
-                var book = await _bookService.GetByIsbnAsync(isbn);
-                if (book == null)
-                    return NotFound($"No book found with ISBN {isbn}");
-
-                return Ok(book);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error fetching book by ISBN");
-                return StatusCode(500, ex.Message);
-            }
-        }
         [HttpPost("create")]
+        [Authorize]
         public async Task<IActionResult> CreateBook([FromBody] Book book)
         {
             try
@@ -92,7 +75,7 @@ namespace bookFlow.Controllers
 
 
         [HttpDelete("delete/{id}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
             try
@@ -114,7 +97,7 @@ namespace bookFlow.Controllers
             }
         }
         [HttpPut("update-availability/{id}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateAvailability(Guid id)
         {
             try
@@ -131,6 +114,8 @@ namespace bookFlow.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+       
 
 
 

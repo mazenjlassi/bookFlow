@@ -1,11 +1,12 @@
-﻿using bookFlow.Enum;
+﻿using System.ComponentModel.DataAnnotations;
+using bookFlow.Enum;
 
 namespace bookFlow.Models
 {
     public class Loan
     {
-       
-            public Guid Id { get; set; }
+        [Key]
+        public Guid Id { get; set; }
 
             public Guid BookId { get; set; }
             public Book Book { get; set; }

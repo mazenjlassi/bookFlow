@@ -1,5 +1,4 @@
 using bookFlow.Data;
-using bookFlow.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -11,12 +10,32 @@ using bookFlow.Repositories.Interfaces;
 using bookFlow.Repositories.Implementations;
 using bookFlow.Repositories.Implimentations;
 using bookFlow.Services.Implementations;
+using BookFlow.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
+
+// Add CORS policy here BEFORE Build()
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularApp", builder =>
+    {
+        builder.WithOrigins("http://localhost:4200")  // Your Angular URL
+               .AllowAnyHeader()
+               .AllowAnyMethod();
+        //.AllowCredentials(); // Uncomment if using credentials
+    });
+});
+
+
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
@@ -39,25 +58,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-
-//add repository to scope
+// Add repositories to scope
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
 builder.Services.AddScoped(typeof(IBookRepository), typeof(BookRepository));
 builder.Services.AddScoped(typeof(ILoanRepository), typeof(LoanRepository));
-builder.Services.AddScoped(typeof(IDeliveryManRepository),typeof(DeliveryManRepository));
+builder.Services.AddScoped(typeof(IRatingRepository), typeof(RatingRepository));
 
-
-
-//add services to scope
+// Add services to scope
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped(typeof(IUserService), typeof(UserService));
 builder.Services.AddScoped(typeof(IBookService), typeof(BookService));
 builder.Services.AddScoped(typeof(ILoanService), typeof(LoanService));
-builder.Services.AddScoped(typeof(IDeliveryManService), typeof(DeliveryManService));
-
-
-
+builder.Services.AddScoped(typeof(IRatingService), typeof(RatingService));
 
 var app = builder.Build();
 
@@ -65,11 +78,16 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-
 }
 
 app.UseHttpsRedirection();
 
+// ADD these two lines in this order:
+app.UseRouting();
+
+app.UseCors("AllowAngularApp");
+
+app.UseAuthentication();  // Make sure this is added before Authorization
 app.UseAuthorization();
 
 app.MapControllers();
