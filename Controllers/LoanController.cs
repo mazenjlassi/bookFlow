@@ -1,7 +1,9 @@
-﻿using bookFlow.Enum;
+﻿using bookFlow.Dto;
+using bookFlow.Enum;
 using bookFlow.Models;
 using bookFlow.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -18,61 +20,27 @@ namespace bookFlow.Controllers
             _loanService = loanService;
         }
 
-        // GET: api/Loan
-        [HttpGet("get-all")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetAllLoans()
+        [HttpPost("add")]
+        [Authorize]
+        public async Task<IActionResult> CreateLoan([FromBody] CreateLoanDto request)
         {
-            var loans = await _loanService.GetAllAsync();
-            return Ok(loans);
+            var loanDto = await _loanService.CreateLoanAsync(request.BookId, request.UserId);
+            if (loanDto == null)
+                return BadRequest("Book is not available or invalid book/user ID.");
+
+            return CreatedAtAction(nameof(GetLoanById), new { id = loanDto.Id }, loanDto);
         }
 
-        // GET: api/Loan/{id}
-        [HttpGet("get-by-id/{id}")]
+        [HttpGet("{id}")]
         [Authorize]
         public async Task<IActionResult> GetLoanById(Guid id)
         {
-            var loan = await _loanService.GetByIdAsync(id);
-            if (loan == null) return NotFound();
+            var loan = await _loanService.GetLoanByIdAsync(id);
+            if (loan == null)
+                return NotFound();
 
+            // Map to DTO if needed, or create a separate method for DTO mapping
             return Ok(loan);
         }
-
-        // POST: api/Loan
-        [HttpPost("add")]
-        [Authorize]
-        public async Task<IActionResult> CreateLoan([FromQuery] string isbn)
-        {
-            var userId = GetUserId();
-            if (userId == Guid.Empty) return Unauthorized();
-
-            var loan = await _loanService.CreateLoanAsync(isbn, userId);
-            if (loan == null) return BadRequest("Book not available or ISBN invalid.");
-
-            return CreatedAtAction(nameof(GetLoanById), new { id = loan.Id }, loan);
-        }
-
-        // PUT: api/Loan/{id}/status
-        [HttpPut("update/{id}/status")]
-        [Authorize]
-        public async Task<IActionResult> UpdateLoanStatus(Guid id, [FromQuery] LoanStatus newStatus)
-        {
-            var userId = GetUserId();
-            if (userId == Guid.Empty) return Unauthorized();
-
-            bool isAdmin = User.IsInRole("Admin");
-
-            var success = await _loanService.UpdateLoanStatusAsync(id, userId, newStatus, isAdmin);
-            if (!success) return Forbid("You are not allowed to update this loan status.");
-
-            return NoContent();
-        }
-
-        // Helper: Get logged-in user's GUID from claims
-        private Guid GetUserId()
-        {
-            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return Guid.TryParse(userIdString, out var userId) ? userId : Guid.Empty;
-        }
     }
-}
+    }

@@ -16,10 +16,12 @@ namespace bookFlow.Repositories.Implimentations
             _context = context;
         }
 
-        public async Task AddAsync(Loan entity)
+
+        public async Task AddAsync(Loan loan)
         {
-            await _context.Loans.AddAsync(entity);
+            await _context.Loans.AddAsync(loan);
         }
+
 
         public void Delete(Loan entity)
         {
@@ -38,8 +40,9 @@ namespace bookFlow.Repositories.Implimentations
 
         public async Task<Loan?> GetByIdAsync(Guid id)
         {
-            return await _context.Loans.Include(l => l.Book).Include(l => l.User).FirstOrDefaultAsync(l => l.Id== id);
+            return await _context.Loans.FindAsync(id);
         }
+
 
         public async Task<Loan?> GetByIsbnAndUserAsync(string isbn, Guid userId)
         {

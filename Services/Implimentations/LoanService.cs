@@ -1,7 +1,11 @@
-﻿using bookFlow.Enum;
+﻿using System;
+using bookFlow.Data;
+using bookFlow.Dto;
+using bookFlow.Enum;
 using bookFlow.Models;
 using bookFlow.Repositories.Interfaces;
 using bookFlow.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace bookFlow.Services.Implementations
 {
@@ -9,11 +13,14 @@ namespace bookFlow.Services.Implementations
     {
         private readonly ILoanRepository _loanRepository;
         private readonly IBookRepository _bookRepository;
+        private readonly UserDbContext _context;
 
-        public LoanService(ILoanRepository loanRepo, IBookRepository bookRepo)
+        public LoanService(ILoanRepository loanRepo, IBookRepository bookRepo,UserDbContext context)
         {
             _loanRepository = loanRepo;
             _bookRepository = bookRepo;
+            _context = context;
+
         }
 
         public async Task<IEnumerable<Loan>> GetAllAsync()
@@ -21,28 +28,46 @@ namespace bookFlow.Services.Implementations
             return await _loanRepository.GetAllAsync();
         }
 
-        public async Task<Loan?> GetByIdAsync(Guid id)
+        public async Task<Loan?> GetLoanByIdAsync(Guid id)
         {
             return await _loanRepository.GetByIdAsync(id);
         }
 
-        public async Task<Loan?> CreateLoanAsync(string isbn, Guid userId)
-        {
-            var book = await _bookRepository.GetByIsbnAsync(isbn);
-            if (book == null || !book.IsAvailable) return null;
 
-            var newLoan = new Loan
+        public async Task<LoanDto?> CreateLoanAsync(Guid bookId, Guid userId)
+        {
+            var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == bookId);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (book == null || user == null || !book.IsAvailable)
+                return null;
+
+            // create loan
+            var loan = new Loan
             {
                 Id = Guid.NewGuid(),
-                BookId = book.Id,
+                BookId = bookId,
                 UserId = userId,
                 StartDate = DateTime.UtcNow,
                 Status = LoanStatus.EN_COURS
             };
 
-            await _loanRepository.AddAsync(newLoan);
+            // mark book as unavailable
+            book.IsAvailable = false;
+
+            await _loanRepository.AddAsync(loan);
             await _loanRepository.SaveChangesAsync();
-            return newLoan;
+
+            // Map to DTO
+            return new LoanDto
+            {
+                Id = loan.Id,
+                BookId = loan.BookId,
+                BookTitle = book.Title,
+                UserId = loan.UserId,
+                StartDate = loan.StartDate,
+                Status = loan.Status.ToString()
+            };
         }
 
         public async Task<bool> UpdateLoanStatusAsync(Guid loanId, Guid userId, LoanStatus newStatus, bool isAdmin)
@@ -63,5 +88,7 @@ namespace bookFlow.Services.Implementations
             _loanRepository.Update(loan);
             return await _loanRepository.SaveChangesAsync();
         }
+
+        
     }
 }

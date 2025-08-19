@@ -37,6 +37,10 @@ public class RatingService : IRatingService
         return await _ratingRepository.GetByIdAsync(id);
     }
 
+
+
+
+
     public async Task<IEnumerable<Rating>> GetRatingsByBookIdAsync(Guid bookId)
     {
         var allRatings = await _ratingRepository.GetAllAsync();
