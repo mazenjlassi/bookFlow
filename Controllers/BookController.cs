@@ -97,7 +97,7 @@ namespace bookFlow.Controllers
             }
         }
         [HttpPut("update-availability/{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         public async Task<IActionResult> UpdateAvailability(Guid id)
         {
             try

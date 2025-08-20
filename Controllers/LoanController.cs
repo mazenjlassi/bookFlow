@@ -42,5 +42,18 @@ namespace bookFlow.Controllers
             // Map to DTO if needed, or create a separate method for DTO mapping
             return Ok(loan);
         }
+
+
+        [HttpDelete("delete/{id}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteLoan(Guid id)
+        {
+            var result = await _loanService.DeleteLoanIfEnCoursAsync(id);
+
+            if (!result)
+                return BadRequest("Loan not found or status is not EN_COURS");
+
+            return NoContent();
+        }
     }
     }

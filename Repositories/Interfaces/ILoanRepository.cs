@@ -6,6 +6,8 @@ namespace bookFlow.Repositories.Interfaces
     {
         Task<Loan?> GetByIsbnAndUserAsync(string isbn, Guid userId);
         Task AddAsync(Loan loan);
+        Task<bool> DeleteLoanIfEnCoursAsync(Guid loanId);
+
         Task<Loan?> GetByIdAsync(Guid id);
 
     }

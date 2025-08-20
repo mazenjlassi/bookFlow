@@ -88,7 +88,10 @@ namespace bookFlow.Services.Implementations
             _loanRepository.Update(loan);
             return await _loanRepository.SaveChangesAsync();
         }
+        public async Task<bool> DeleteLoanIfEnCoursAsync(Guid loanId)
+        {
+            return await _loanRepository.DeleteLoanIfEnCoursAsync(loanId);
+        }
 
-        
     }
 }
