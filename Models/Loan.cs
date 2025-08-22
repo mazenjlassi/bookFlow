@@ -15,7 +15,7 @@ namespace bookFlow.Models
             public User User { get; set; }
 
             public DateTime StartDate { get; set; }
-            public DateTime? ReturnDate { get; set; }
+            public DateTime ReturnDate { get; set; }
 
             public LoanStatus Status { get; set; }
 
