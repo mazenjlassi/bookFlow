@@ -12,7 +12,7 @@ using bookFlow.Data;
 namespace bookFlow.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20250809174344_m1")]
+    [Migration("20250822124157_m1")]
     partial class m1
     {
         /// <inheritdoc />
@@ -136,7 +136,7 @@ namespace bookFlow.Migrations
                     b.Property<Guid>("BookId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("ReturnDate")
+                    b.Property<DateTime>("ReturnDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("StartDate")

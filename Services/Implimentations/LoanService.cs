@@ -41,6 +41,9 @@ namespace bookFlow.Services.Implementations
 
             if (book == null || user == null || !book.IsAvailable)
                 return null;
+            // Calculate dates
+            var startDate = DateTime.UtcNow;
+            var returnDate = startDate.AddDays(15);
 
             // create loan
             var loan = new Loan
@@ -49,7 +52,9 @@ namespace bookFlow.Services.Implementations
                 BookId = bookId,
                 UserId = userId,
                 StartDate = DateTime.UtcNow,
+                ReturnDate = DateTime.UtcNow.AddDays(14),
                 Status = LoanStatus.EN_COURS
+
             };
 
             // mark book as unavailable
@@ -57,7 +62,7 @@ namespace bookFlow.Services.Implementations
 
             await _loanRepository.AddAsync(loan);
             await _loanRepository.SaveChangesAsync();
-
+           
             // Map to DTO
             return new LoanDto
             {
@@ -65,7 +70,9 @@ namespace bookFlow.Services.Implementations
                 BookId = loan.BookId,
                 BookTitle = book.Title,
                 UserId = loan.UserId,
+                UserName = user.Username,
                 StartDate = loan.StartDate,
+                ReturnDate = loan.ReturnDate,
                 Status = loan.Status.ToString()
             };
         }
@@ -92,6 +99,24 @@ namespace bookFlow.Services.Implementations
         {
             return await _loanRepository.DeleteLoanIfEnCoursAsync(loanId);
         }
+
+        public async Task<IEnumerable<LoanDto>> GetAllLoansByUserIdAsync(Guid userId)
+        {
+            var loans = await _loanRepository.FindAsync(l => l.UserId == userId);
+
+            return loans.Select(l => new LoanDto
+            {
+                Id = l.Id,
+                BookId = l.BookId,
+                BookTitle = l.Book?.Title ?? "N/A",
+                UserId = l.UserId,
+                UserName = l.User?.Username ?? "N/A",
+                StartDate = l.StartDate,
+                ReturnDate = l.ReturnDate,
+                Status = l.Status.ToString()
+            });
+        }
+
 
     }
 }

@@ -21,15 +21,20 @@ namespace bookFlow.Controllers
         }
 
         [HttpPost("add")]
-        [Authorize]
-        public async Task<IActionResult> CreateLoan([FromBody] CreateLoanDto request)
+        public async Task<IActionResult> CreateLoan([FromBody] CreateLoanDto createLoanDto)
         {
-            var loanDto = await _loanService.CreateLoanAsync(request.BookId, request.UserId);
-            if (loanDto == null)
-                return BadRequest("Book is not available or invalid book/user ID.");
+            if (createLoanDto == null || createLoanDto.BookId == Guid.Empty || createLoanDto.UserId == Guid.Empty)
+                return BadRequest("Invalid data.");
 
-            return CreatedAtAction(nameof(GetLoanById), new { id = loanDto.Id }, loanDto);
+            var loanDto = await _loanService.CreateLoanAsync(createLoanDto.BookId, createLoanDto.UserId);
+
+            if (loanDto == null)
+                return BadRequest("Book not available or user not found.");
+
+            return Ok(loanDto);
         }
+
+
 
         [HttpGet("{id}")]
         [Authorize]
@@ -54,6 +59,17 @@ namespace bookFlow.Controllers
                 return BadRequest("Loan not found or status is not EN_COURS");
 
             return NoContent();
+        }
+
+        [HttpGet("user/{userId}")]
+        [Authorize]
+        public async Task<IActionResult> GetLoansByUser(Guid userId)
+        {
+            var loans = await _loanService.GetAllLoansByUserIdAsync(userId);
+            if (loans == null)
+                return NotFound("No loans found for this user.");
+
+            return Ok(loans);
         }
     }
     }

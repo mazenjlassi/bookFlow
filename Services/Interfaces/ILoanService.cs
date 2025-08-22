@@ -13,5 +13,8 @@ namespace bookFlow.Services.Interfaces
         Task<bool> UpdateLoanStatusAsync(Guid loanId, Guid userId, LoanStatus newStatus, bool isAdmin);
 
         Task<bool> DeleteLoanIfEnCoursAsync(Guid loanId);
+
+        Task<IEnumerable<LoanDto>> GetAllLoansByUserIdAsync(Guid userId);
+
     }
 }
