@@ -20,7 +20,16 @@ namespace bookFlow.Controllers
             _loanService = loanService;
         }
 
+        [HttpGet("get-all")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> GetAllLoans()
+        {
+            var loans = await _loanService.GetAllAsync();
+            return Ok(loans);
+        }
+
         [HttpPost("add")]
+        
         public async Task<IActionResult> CreateLoan([FromBody] CreateLoanDto createLoanDto)
         {
             if (createLoanDto == null || createLoanDto.BookId == Guid.Empty || createLoanDto.UserId == Guid.Empty)

@@ -55,7 +55,7 @@ namespace bookFlow.Controllers
         }
 
         [HttpPost("create")]
-        [Authorize]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> CreateBook([FromBody] Book book)
         {
             try
@@ -75,7 +75,7 @@ namespace bookFlow.Controllers
 
 
         [HttpDelete("delete/{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> Delete(Guid id)
         {
             try

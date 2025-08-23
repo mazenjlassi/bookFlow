@@ -55,7 +55,7 @@ namespace bookFlow.Services.Implimentations
             user.PasswordHash = hashedPassword;
             user.Email = request.Email;
             user.FullName = request.FullName;
-
+            user.Role = request.Role;
             context.Users.Add(user);
             await context.SaveChangesAsync();
 
