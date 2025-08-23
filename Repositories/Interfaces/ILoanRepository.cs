@@ -12,5 +12,7 @@ namespace bookFlow.Repositories.Interfaces
 
         Task<IEnumerable<Loan>> GetLoansByUserIdAsync(Guid userId);
 
+        Task<IEnumerable<Loan>> GetAllAsync();
+
     }
 }
