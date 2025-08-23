@@ -40,6 +40,19 @@ public class RatingController : ControllerBase
         return Ok(rating);
     }
 
+
+    // DELETE api/rating/{id}
+    [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "ADMIN")] // only admin can delete ratings
+    public async Task<IActionResult> DeleteRating(Guid id)
+    {
+        var deleted = await _ratingService.DeleteRatingAsync(id);
+        if (!deleted)
+            return NotFound("Rating not found.");
+
+        return Ok("Rating deleted successfully.");
+    }
+
     // GET api/rating/book/{bookId}
     [HttpGet("book/{bookId:guid}")]
     [Authorize]

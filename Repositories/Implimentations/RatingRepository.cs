@@ -56,7 +56,7 @@ namespace BookFlow.Repositories
             return rating;
         }
 
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task<bool> DeleteByIdAsync(Guid id)
         {
             var rating = await _context.Ratings.FindAsync(id);
             if (rating == null) return false;
