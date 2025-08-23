@@ -14,7 +14,7 @@ namespace BookFlow.Repositories
         Task<IEnumerable<Rating>> GetByUserIdAsync(int userId);
         Task<Rating> AddAsync(Rating rating);
         Task<Rating> UpdateAsync(Rating rating);
-        Task<bool> DeleteAsync(int id);
+        Task<bool> DeleteByIdAsync(Guid id);
         Task<double> GetAverageRatingForBookAsync(int bookId);
     }
 }

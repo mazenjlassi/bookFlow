@@ -9,5 +9,6 @@ public interface IRatingService
     Task<Rating> GetRatingByIdAsync(Guid id);
     Task<IEnumerable<Rating>> GetRatingsByBookIdAsync(Guid bookId);
     Task<double> GetAverageRatingByBookIdAsync(Guid bookId);
-   
+    Task<bool> DeleteRatingAsync(Guid id);
+
 }

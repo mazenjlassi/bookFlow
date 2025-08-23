@@ -62,6 +62,9 @@ public class RatingService : IRatingService
         // Return average
         return ratings.Average(r => r.Score);
     }
+    public async Task<bool> DeleteRatingAsync(Guid id)
+    {
+        return await _ratingRepository.DeleteByIdAsync(id);
+    }
 
-   
 }
