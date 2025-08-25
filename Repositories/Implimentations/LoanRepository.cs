@@ -112,7 +112,8 @@ namespace bookFlow.Repositories.Implementations
         public async Task<IEnumerable<Loan>> GetLoansByBookIdAsync(Guid bookId)
         {
             return await _context.Loans
-                .Include(l => l.User)
+                .Include(l => l.Book)   // optional: load book details
+                .Include(l => l.User)   // optional: load user who borrowed
                 .Where(l => l.BookId == bookId)
                 .ToListAsync();
         }
@@ -129,6 +130,18 @@ namespace bookFlow.Repositories.Implementations
         public async Task<bool> ExistsAsync(Guid id)
         {
             return await _context.Loans.AnyAsync(l => l.Id == id);
+        }
+
+
+        public async Task<Loan> ApproveLoanAsync(Guid loanId)
+        {
+            var loan = await _context.Loans.FindAsync(loanId);
+            if (loan == null || loan.Status != Enum.LoanStatus.EN_COURS)
+                return null;
+
+            loan.Status = Enum.LoanStatus.APPROVED;
+            await _context.SaveChangesAsync();
+            return loan;
         }
     }
 }

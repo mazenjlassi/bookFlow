@@ -1,6 +1,7 @@
 ﻿using bookFlow.Dto;
 using bookFlow.Enum;
 using bookFlow.Models;
+using bookFlow.Services.Implimentations;
 using bookFlow.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
@@ -13,11 +14,13 @@ namespace bookFlow.Controllers
     [ApiController]
     public class LoanController : ControllerBase
     {
+        private readonly IDeliveryService _deliveryService;
         private readonly ILoanService _loanService;
 
-        public LoanController(ILoanService loanService)
+        public LoanController(ILoanService loanService, IDeliveryService deliveryService)
         {
             _loanService = loanService;
+            _deliveryService = deliveryService;
         }
 
         [HttpGet("get-all")]
@@ -80,5 +83,40 @@ namespace bookFlow.Controllers
 
             return Ok(loans);
         }
+
+        // GET api/loan/book/{bookId}
+        [HttpGet("book/{bookId:guid}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> GetLoansByBookId(Guid bookId)
+        {
+            var loans = await _loanService.GetLoansByBookIdAsync(bookId);
+            if (loans == null || !loans.Any())
+                return NotFound("No loans found for this book.");
+
+            return Ok(loans);
+        }
+
+        [HttpPut("approve/{loanId:guid}")]
+        [Authorize(Roles = "ADMIN")]
+        public async Task<IActionResult> ApproveLoan(Guid loanId)
+        {
+            var loan = await _loanService.ApproveLoanAsync(loanId);
+            if (loan == null) return NotFound("Loan not found.");
+
+            var delivery = new Delivery
+            {
+                Id = Guid.NewGuid(),
+                LoanId = loan.Id,
+                Status = DeliveryStatus.EN_ATTENTE,
+                DeliveryDate = DateTime.Now,
+                UserId = null, // ✅ no delivery-man at creation
+                Loan = loan
+            };
+
+            await _deliveryService.CreateDeliveryAsync(delivery);
+
+            return Ok(new { Loan = loan, Message = "Loan approved successfully" });
+        }
+
     }
-    }
+}

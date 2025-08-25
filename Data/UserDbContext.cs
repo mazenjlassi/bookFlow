@@ -72,7 +72,8 @@ namespace bookFlow.Data
                 .HasOne(l => l.Delivery)
                 .WithOne(d => d.Loan)
                 .HasForeignKey<Delivery>(d => d.LoanId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(false);
 
             // User (DeliveryMan role) - Delivery (1:N)
             modelBuilder.Entity<User>()

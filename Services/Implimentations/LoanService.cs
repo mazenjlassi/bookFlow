@@ -118,5 +118,13 @@ namespace bookFlow.Services.Implementations
         }
 
 
+        public async Task<IEnumerable<Loan>> GetLoansByBookIdAsync(Guid bookId)
+        {
+            return await _loanRepository.GetLoansByBookIdAsync(bookId);
+        }
+        public async Task<Loan> ApproveLoanAsync(Guid loanId)
+        { 
+           return await _loanRepository.ApproveLoanAsync(loanId);
+        }
     }
 }

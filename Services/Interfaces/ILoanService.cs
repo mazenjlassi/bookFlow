@@ -16,5 +16,9 @@ namespace bookFlow.Services.Interfaces
 
         Task<IEnumerable<LoanDto>> GetAllLoansByUserIdAsync(Guid userId);
 
+        Task<IEnumerable<Loan>> GetLoansByBookIdAsync(Guid bookId);
+
+        Task<Loan> ApproveLoanAsync(Guid loanId);
+
     }
 }
