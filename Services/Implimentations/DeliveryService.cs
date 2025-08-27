@@ -28,8 +28,17 @@ namespace bookFlow.Services.Implimentations
             delivery.Id = Guid.NewGuid();
 
             await _deliveryRepository.AddAsync(delivery);
+            await _deliveryRepository.SaveChangesAsync();
             return delivery;
         }
+
+        public async Task<IEnumerable<Delivery>> GetAllAsync()
+        {
+            return await _deliveryRepository.GetAllAsync();
+        }
+
+
+
 
         public async Task<Delivery?> GetDeliveryByIdAsync(Guid id)
         {

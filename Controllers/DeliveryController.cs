@@ -33,5 +33,14 @@ namespace bookFlow.Controllers
             return Ok(createdDelivery);
         }
 
+        // GET: api/delivery
+        [HttpGet]
+        [Authorize(Roles = "ADMIN")] // optional, only admins can see all deliveries
+        public async Task<IActionResult> GetAllDeliveries()
+        {
+            var deliveries = await _deliveryService.GetAllAsync();
+            return Ok(deliveries);
+        }
+
     }
 }

@@ -6,5 +6,7 @@ namespace bookFlow.Services.Interfaces
     {
         Task<Delivery> CreateDeliveryAsync(Delivery delivery);
         Task<Delivery?> GetDeliveryByIdAsync(Guid id);
+        Task<IEnumerable<Delivery>> GetAllAsync();
+
     }
 }
