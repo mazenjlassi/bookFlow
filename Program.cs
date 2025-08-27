@@ -11,6 +11,8 @@ using bookFlow.Repositories.Implementations;
 using bookFlow.Repositories.Implimentations;
 using bookFlow.Services.Implementations;
 using BookFlow.Repositories;
+using bookFlow.Models;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -73,6 +75,12 @@ builder.Services.AddScoped(typeof(IBookService), typeof(BookService));
 builder.Services.AddScoped(typeof(ILoanService), typeof(LoanService));
 builder.Services.AddScoped(typeof(IRatingService), typeof(RatingService));
 builder.Services.AddScoped(typeof(IDeliveryService), typeof(DeliveryService));
+builder.Services.AddScoped(typeof(IDeliveryManService), typeof(DeliveryManService));
+
+
+
+
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
 var app = builder.Build();
 

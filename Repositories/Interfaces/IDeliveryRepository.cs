@@ -3,10 +3,11 @@ using bookFlow.Repositories.Implementations;
 
 namespace bookFlow.Repositories.Interfaces
 {
-    public interface IDeliveryRepository: IGenericRepository<Delivery>
+    public interface IDeliveryRepository : IGenericRepository<Delivery>
     {
-        Task<Delivery> CreateAsync(Delivery delivery);
+        Task AddAsync(Delivery delivery);
         Task<Delivery?> GetByIdAsync(Guid id);
-        Task SaveChangesAsync();
+        Task<IEnumerable<Delivery>> GetAllAsync();
+        
     }
 }
