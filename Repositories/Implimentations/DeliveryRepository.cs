@@ -62,24 +62,55 @@ namespace bookFlow.Repositories.Implementations
 
         
 
-        public Task<bool> SaveChangesAsync()
+    
+
+        public async Task<IEnumerable<Delivery>> FindAsync(Expression<Func<Delivery, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return await _context.Deliveries
+                .Where(predicate)
+                .Include(d => d.Loan)
+                    .ThenInclude(l => l.User)
+                .Include(d => d.Loan)
+                    .ThenInclude(l => l.Book)
+                .ToListAsync();
         }
 
-        public Task<IEnumerable<Delivery>> FindAsync(Expression<Func<Delivery, bool>> predicate)
+
+
+
+        public async Task<IEnumerable<Delivery>> GetAllByDeliveryManIdAsync(Guid deliveryManId)
         {
-            throw new NotImplementedException();
+            return await _context.Deliveries
+                .Where(d => d.UserId == deliveryManId)
+                .Include(d => d.Loan)
+                .Include(d => d.Loan.User)
+                .ToListAsync();
+        }
+        public async Task<IEnumerable<Delivery>> GetAllPendingAsync()
+        {
+            return await _context.Deliveries
+                .Where(d => d.UserId == null && d.Status == Enum.DeliveryStatus.EN_ATTENTE)
+                .Include(d => d.Loan)
+                .Include(d => d.Loan.User)
+                .ToListAsync();
         }
 
         public void Update(Delivery entity)
         {
-            throw new NotImplementedException();
+            // Mark the entity as modified
+            _context.Deliveries.Update(entity);
         }
 
         public void Delete(Delivery entity)
         {
-            throw new NotImplementedException();
+            _context.Deliveries.Remove(entity);
         }
+        public async Task<bool> SaveChangesAsync()
+        {
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+        
+
     }
 }
