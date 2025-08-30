@@ -8,5 +8,10 @@ namespace bookFlow.Services.Interfaces
         Task<Delivery?> GetDeliveryByIdAsync(Guid id);
         Task<IEnumerable<Delivery>> GetAllAsync();
 
+        Task<IEnumerable<Delivery>> GetDeliveriesByDeliveryManIdAsync(Guid deliveryManId);
+        Task<Delivery> AssignDeliveryAsync(Guid deliveryId, Guid deliveryManId);
+        Task<Delivery> UpdateStatusAsync(Guid deliveryId, Enum.DeliveryStatus status);
+        Task<IEnumerable<Delivery>> GetPendingDeliveriesAsync();
+        
     }
 }

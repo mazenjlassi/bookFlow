@@ -1,4 +1,5 @@
-﻿using bookFlow.Models;
+﻿using bookFlow.Enum;
+using bookFlow.Models;
 using bookFlow.Repositories.Implementations;
 using bookFlow.Repositories.Interfaces;
 using bookFlow.Services.Interfaces;
@@ -44,5 +45,45 @@ namespace bookFlow.Services.Implimentations
         {
             return await _deliveryRepository.GetByIdAsync(id);
         }
+
+        public async Task<Delivery> AssignDeliveryAsync(Guid deliveryId, Guid deliveryManId)
+        {
+            var delivery = await _deliveryRepository.GetByIdAsync(deliveryId);
+            if (delivery == null)
+                throw new Exception("Delivery not found.");
+
+            if (delivery.UserId != null)
+                throw new Exception("Delivery already assigned.");
+
+            delivery.UserId= deliveryManId;
+            delivery.Status = DeliveryStatus.EN_COURS;
+            await _deliveryRepository.SaveChangesAsync();
+            return delivery;
+        }
+
+        public async Task<Delivery> UpdateStatusAsync(Guid deliveryId, DeliveryStatus status)
+        {
+            var delivery = await _deliveryRepository.GetByIdAsync(deliveryId);
+            if (delivery == null)
+                throw new Exception("Delivery not found.");
+
+            delivery.Status = status;
+
+            _deliveryRepository.Update(delivery);
+            await _deliveryRepository.SaveChangesAsync();
+            return delivery;
+        }
+
+        public async Task<IEnumerable<Delivery>> GetDeliveriesByDeliveryManIdAsync(Guid deliveryManId)
+        {
+            return await _deliveryRepository.GetAllByDeliveryManIdAsync(deliveryManId);
+        }
+
+        public async Task<IEnumerable<Delivery>> GetPendingDeliveriesAsync()
+        {
+            return await _deliveryRepository.GetAllPendingAsync();
+        }
+
+
     }
 }
