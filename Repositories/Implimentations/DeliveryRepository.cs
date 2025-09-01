@@ -58,11 +58,20 @@ namespace bookFlow.Repositories.Implementations
             await _context.SaveChangesAsync();
         }
 
-        
 
-        
 
-    
+
+
+
+        public async Task<Delivery?> GetByLoanIdAsync(Guid loanId)
+        {
+            return await _context.Deliveries
+                .Include(d => d.Loan)          // include loan details
+                .Include(d => d.DeliveryMan)   // include delivery man details
+                .FirstOrDefaultAsync(d => d.LoanId == loanId);
+        }
+
+
 
         public async Task<IEnumerable<Delivery>> FindAsync(Expression<Func<Delivery, bool>> predicate)
         {
