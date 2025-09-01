@@ -1,8 +1,11 @@
-﻿using bookFlow.Enum;
+﻿using System;
+using bookFlow.Data;
+using bookFlow.Enum;
 using bookFlow.Models;
 using bookFlow.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace bookFlow.Controllers
 {
@@ -82,6 +85,65 @@ namespace bookFlow.Controllers
 
             return Ok(found);
         }
+        [HttpPost("return-by-loan/{loanId}")]
+        public async Task<IActionResult> ReturnBookByLoan(Guid loanId)
+        {
+            // Reuse GetDeliveryByLoanIdAsync
+            var delivery = await _deliveryService.GetDeliveryByLoanIdAsync(loanId);
+
+            if (delivery == null)
+                return NotFound(new { message = "No delivery found for this loan" });
+
+            // Update Loan status
+            if (delivery.Loan != null)
+            {
+                delivery.Loan.Status = LoanStatus.RETOURNE;
+            }
+
+            // Make book available again
+            if (delivery.Loan?.Book != null)
+            {
+                delivery.Loan.Book.IsAvailable = true;
+            }
+
+            // Update Delivery status through your existing service
+            await _deliveryService.UpdateStatusAsync(delivery.Id, DeliveryStatus.LIVRE);
+
+            // Build return object
+            var result = new
+            {
+                delivery.Id,
+                Loan = new
+                {
+                    delivery.Loan.Id,
+                    delivery.Loan.Book.Title,
+                    delivery.Loan.Status
+                },
+                DeliveryMan = delivery.DeliveryMan != null ? new
+                {
+                    delivery.DeliveryMan.Id,
+                    delivery.DeliveryMan.Email,
+                    delivery.DeliveryMan.PhoneNumber
+                } : null
+            };
+
+            return Ok(result);
+        }
+
+
+
+        [HttpGet("get-by-loan/{loanId}")]
+        public async Task<IActionResult> GetDeliveryByLoanId(Guid loanId)
+        {
+            var delivery = await _deliveryService.GetDeliveryByLoanIdAsync(loanId);
+            if (delivery == null)
+                return NotFound(new { message = "No delivery found for this loan" });
+
+            return Ok(delivery);
+        }
+
+
+
 
     }
 }

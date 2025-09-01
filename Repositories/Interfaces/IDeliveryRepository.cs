@@ -11,6 +11,8 @@ namespace bookFlow.Repositories.Interfaces
 
         Task<IEnumerable<Delivery>> GetAllPendingAsync();
         Task<IEnumerable<Delivery>> GetAllByDeliveryManIdAsync(Guid deliveryManId);
+        Task<Delivery?> GetByLoanIdAsync(Guid loanId);
+
 
     }
 }

@@ -85,5 +85,11 @@ namespace bookFlow.Services.Implimentations
         }
 
 
+
+        public async Task<Delivery?> GetDeliveryByLoanIdAsync(Guid loanId)
+        {
+            return await _deliveryRepository.GetByLoanIdAsync(loanId);
+        }
+
     }
 }
